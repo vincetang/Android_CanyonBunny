@@ -3,6 +3,7 @@ package com.vince;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.math.MathUtils;
 /**
  * Created by Vince on 16-07-04.
  */
-public class WorldController {
+public class WorldController extends InputAdapter {
     private static final String TAG = WorldController.class.getName();
 
     public Sprite[] sprites;
@@ -22,6 +23,8 @@ public class WorldController {
     }
 
     public void init() {
+        // Tells LibGDX where to send input events
+        Gdx.input.setInputProcessor(this);
         initSprites();
     }
 
@@ -112,4 +115,19 @@ public class WorldController {
 
     }
 
+    @Override
+    public boolean keyUp(int keycode) {
+        // Reset game world
+        if (keycode == Input.Keys.R) {
+            init();
+            Gdx.app.debug(TAG, "Game world resetted");
+        }
+
+        // Select next sprite
+        else if (keycode == Input.Keys.SPACE) {
+            selectedSprite = (selectedSprite + 1) % sprites.length;
+            Gdx.app.debug(TAG, "Sprite #" + selectedSprite + " selected");
+        }
+        return false;
+    }
 }
